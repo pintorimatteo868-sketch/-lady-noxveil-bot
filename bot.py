@@ -9,6 +9,7 @@ from telegram.ext import (
 )
 
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
+OWNER_CHAT_ID = int(os.environ["OWNER_CHAT_ID"])
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
