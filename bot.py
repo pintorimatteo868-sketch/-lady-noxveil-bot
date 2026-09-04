@@ -117,7 +117,7 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "You can ask about the menu, custom requests, VIP access "
             "or contact Lady Noxveil."
         )
-
+await notify_owner(update, context)
     await update.message.reply_text(reply)
 
 
