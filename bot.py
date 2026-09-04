@@ -12,6 +12,7 @@ TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 OWNER_CHAT_ID = int(os.environ["OWNER_CHAT_ID"])
 
 async def notify_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await notify_owner(update, context)
     user = update.effective_user
     text = update.message.text if update.message else ""
 
