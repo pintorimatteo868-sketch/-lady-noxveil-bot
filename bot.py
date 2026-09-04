@@ -11,25 +11,27 @@ from telegram.ext import (
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 OWNER_CHAT_ID = int(os.environ["OWNER_CHAT_ID"])
 
+
 async def notify_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await notify_owner(update, context)
     user = update.effective_user
     text = update.message.text if update.message else ""
 
-    username = f"@{user.username}" if user.username else "nessun username"
+    username = f"@{user.username}" if user.username else "No username"
 
     message = (
-        "🔔 Nuova richiesta per Lady Noxveil\n\n"
-        f"Utente: {user.first_name}\n"
+        "🔔 New message for Lady Noxveil\n\n"
+        f"From: {user.full_name}\n"
         f"Username: {username}\n"
         f"Telegram ID: {user.id}\n\n"
-        f"Messaggio:\n{text}"
+        f"Message:\n{text}"
     )
 
     await context.bot.send_message(
         chat_id=OWNER_CHAT_ID,
-        text=message
+        text=message,
     )
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🖤 Welcome to Lady Noxveil's private world. 🎭\n\n"
@@ -61,7 +63,8 @@ async def custom(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "✨ CUSTOM REQUEST\n\n"
         "Send your idea here in one message.\n"
-        "Lady Noxveil will review your request and confirm the final price before payment. 🖤"
+        "Lady Noxveil will review your request and confirm "
+        "the final price before payment. 🖤"
     )
 
 
@@ -98,26 +101,36 @@ async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if any(word in text for word in ["ciao", "hello", "hi", "hey"]):
         reply = (
             "🖤 Welcome to Lady Noxveil's private world. 🎭\n\n"
-            "You can ask about the menu, custom content, VIP access or contact."
+            "You can ask about the menu, custom content, "
+            "VIP access or contact."
         )
+
     elif any(word in text for word in ["prezzo", "prezzi", "price", "menu"]):
         reply = "🖤 You can view the full Private Menu with /menu."
+
     elif any(word in text for word in ["custom", "personalizzato", "richiesta"]):
         reply = (
             "✨ For a custom request, send your idea in one message "
             "or use /custom."
         )
+
     elif any(word in text for word in ["vip", "private", "access"]):
         reply = "🗝 For private experiences and VIP access, use /vip."
+
     elif any(word in text for word in ["pagamento", "payment", "pay"]):
         reply = "💳 Payment details are confirmed privately before delivery."
+
     else:
         reply = (
-            "🖤 I’m Lady Noxveil’s private assistant. 🎭\n\n"
-            "You can ask about the menu, custom requests, VIP access "
-            "or contact Lady Noxveil."
+            "🖤 I'm Lady Noxveil's private assistant. 🎭\n\n"
+            "You can ask about the menu, custom requests, "
+            "VIP access or contact Lady Noxveil."
         )
-await notify_owner(update, context)
+
+    # Avoid sending a notification when you test the bot yourself.
+    if update.effective_user.id != OWNER_CHAT_ID:
+        await notify_owner(update, context)
+
     await update.message.reply_text(reply)
 
 
@@ -130,7 +143,10 @@ def main():
     app.add_handler(CommandHandler("vip", vip))
     app.add_handler(CommandHandler("contact", contact))
     app.add_handler(CommandHandler("help", help_command))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, auto_reply))
+
+    app.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, auto_reply)
+    )
 
     print("Lady Noxveil bot is running...")
     app.run_polling()
