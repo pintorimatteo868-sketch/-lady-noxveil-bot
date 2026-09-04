@@ -11,7 +11,24 @@ from telegram.ext import (
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 OWNER_CHAT_ID = int(os.environ["OWNER_CHAT_ID"])
 
+async def notify_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    text = update.message.text if update.message else ""
 
+    username = f"@{user.username}" if user.username else "nessun username"
+
+    message = (
+        "🔔 Nuova richiesta per Lady Noxveil\n\n"
+        f"Utente: {user.first_name}\n"
+        f"Username: {username}\n"
+        f"Telegram ID: {user.id}\n\n"
+        f"Messaggio:\n{text}"
+    )
+
+    await context.bot.send_message(
+        chat_id=OWNER_CHAT_ID,
+        text=message
+    )
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🖤 Welcome to Lady Noxveil's private world. 🎭\n\n"
