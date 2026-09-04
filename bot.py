@@ -59,7 +59,44 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/contact — Contact Lady Noxveil\n"
         "/help — Assistance"
     )
+async def auto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text.lower()
 
+    if any(word in text for word in ["ciao", "hello", "hi", "hey"]):
+        reply = (
+            "🖤 Welcome to Lady Noxveil's private world. 🎭\n\n"
+            "You can ask about the menu, custom content, VIP access or contact."
+        )
+
+    elif any(word in text for word in ["prezzo", "prezzi", "price", "menu"]):
+        reply = (
+            "🖤 You can view the full Private Menu with /menu."
+        )
+
+    elif any(word in text for word in ["custom", "personalizzato", "richiesta"]):
+        reply = (
+            "✨ For a custom request, send your idea in one message "
+            "or use /custom."
+        )
+
+    elif any(word in text for word in ["vip", "private", "access"]):
+        reply = (
+            "🗝 For private experiences and VIP access, use /vip."
+        )
+
+    elif any(word in text for word in ["pagamento", "payment", "pay"]):
+        reply = (
+            "💳 Payment details are confirmed privately before delivery."
+        )
+
+    else:
+        reply = (
+            "🖤 I’m Lady Noxveil’s private assistant. 🎭\n\n"
+            "You can ask about the menu, custom requests, VIP access "
+            "or contact Lady Noxveil."
+        )
+
+    await update.message.reply_text(reply)
 def main():
     app = Application.builder().token(TOKEN).build()
 
